@@ -12,10 +12,6 @@
 
 + (SettingsRepository *)sharedSettingsRepository;
 
-- (id)objectForKey:(NSString *)key;
-
-- (NSString *)stringForKey:(NSString *)key;
-
-- (NSString *)serviceUrl;
+- (NSString *)get:(NSString *)key;
 
 @end

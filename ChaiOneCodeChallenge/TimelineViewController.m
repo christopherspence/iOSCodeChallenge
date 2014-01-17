@@ -8,68 +8,53 @@
 
 #import "TimelineViewController.h"
 #import "Post.h"
+#import "User.h"
+#import "AvatarImage.h"
+
+#import <SDWebImage/UIImageView+WebCache.h>
+#import <QuartzCore/QuartzCore.h>
+
+#import "PostRepository.h"
 
 @interface TimelineViewController ()
+
+@property (nonatomic, strong) NSArray *posts;
+
+- (void)refresh;
 
 @end
 
 @implementation TimelineViewController
 
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
-    [[RKObjectManager sharedManager] getObjectsAtPath:@"posts/stream/global" parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-        NSLog(@"%@", mappingResult);
-    } failure:^(RKObjectRequestOperation *operation, NSError *error) {
-        NSLog(@"%@", error);
-    }];
     
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
+    [refreshControl addTarget:self action:@selector(refresh) forControlEvents:UIControlEventValueChanged];
+    self.refreshControl = refreshControl;
+    
+    [self refresh];
 }
 
-- (void)didReceiveMemoryWarning
+- (void)refresh
 {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    [[PostRepository sharedPostRepository] getAll:^(NSArray *posts) {
+        self.posts = posts;
+        
+        [self.tableView reloadData];
+        
+        [self.refreshControl endRefreshing];
+    }];
 }
 
 #pragma mark - Table view data source
 
-- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView
-{
-    return [self.fetchedResultsController sectionIndexTitles];
-}
-
-- (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index
-{
-    return [self.fetchedResultsController sectionForSectionIndexTitle:title atIndex:index];
-}
-
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
-{
-    id sectionInfo = [[self.fetchedResultsController sections] objectAtIndex:section];
-    
-    return [sectionInfo name];
-}
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-    return [self.fetchedResultsController sections].count;
-}
-
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    id sectionInfo = [[self.fetchedResultsController sections] objectAtIndex:section];
+    return self.posts.count;
     
-    return [sectionInfo numberOfObjects];
 }
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"PostCell";
@@ -77,63 +62,19 @@
     
     // Configure the cell...
     
-    Post *post = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    Post *post = [self.posts objectAtIndex:indexPath.row];
+
+    [cell.imageView setImageWithURL:[NSURL URLWithString:post.user.avatarImage.url]
+                  placeholderImage:[UIImage imageNamed:@"personIcon"]];
+
+    // configure rounded coners
+    cell.imageView.layer.cornerRadius = 5.f;
+    cell.imageView.clipsToBounds = YES;
     
-    cell.textLabel.text = post.text;
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@", post.createdAt];
+    cell.textLabel.text = post.user.name;
+    cell.detailTextLabel.text = post.text;
     
     return cell;
 }
-
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
-/*
-#pragma mark - Navigation
-
-// In a story board-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-
- */
 
 @end

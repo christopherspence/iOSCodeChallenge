@@ -15,7 +15,7 @@
 
 @property (nonatomic, retain) NSNumber *height;
 @property (nonatomic, retain) NSString *isDefault;
-@property (nonatomic, retain) NSNumber *url;
+@property (nonatomic, retain) NSString *url;
 @property (nonatomic, retain) NSNumber *width;
 @property (nonatomic, retain) User *user;
 

@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0C17F48D188906540089C701 /* NSArray+Sort.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C17F48C188906540089C701 /* NSArray+Sort.m */; };
+		0C17F48F18890C410089C701 /* personIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C17F48E18890C410089C701 /* personIcon.png */; };
+		0C17F492188910D10089C701 /* PostRepository.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C17F491188910D10089C701 /* PostRepository.m */; };
 		0C1D39C91887A6640064C304 /* TimelineViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C1D39C81887A6640064C304 /* TimelineViewController.m */; };
 		0C1D39F41887B0560064C304 /* SettingsRepository.m in Resources */ = {isa = PBXBuildFile; fileRef = 0C1D39F31887B0560064C304 /* SettingsRepository.m */; };
 		0C1D39FA1887B8700064C304 /* Settings.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0C1D39F91887B8700064C304 /* Settings.plist */; };
@@ -54,6 +57,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0C17F48B188906540089C701 /* NSArray+Sort.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+Sort.h"; sourceTree = "<group>"; };
+		0C17F48C188906540089C701 /* NSArray+Sort.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+Sort.m"; sourceTree = "<group>"; };
+		0C17F48E18890C410089C701 /* personIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = personIcon.png; sourceTree = "<group>"; };
+		0C17F490188910D10089C701 /* PostRepository.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PostRepository.h; sourceTree = "<group>"; };
+		0C17F491188910D10089C701 /* PostRepository.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PostRepository.m; sourceTree = "<group>"; };
 		0C1D39C71887A6640064C304 /* TimelineViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimelineViewController.h; sourceTree = "<group>"; };
 		0C1D39C81887A6640064C304 /* TimelineViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimelineViewController.m; sourceTree = "<group>"; };
 		0C1D39F21887B0560064C304 /* SettingsRepository.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsRepository.h; sourceTree = "<group>"; };
@@ -135,6 +143,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0C17F48A1889063F0089C701 /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				0C17F48B188906540089C701 /* NSArray+Sort.h */,
+				0C17F48C188906540089C701 /* NSArray+Sort.m */,
+			);
+			name = Categories;
+			sourceTree = "<group>";
+		};
 		0C1D39C61887A6420064C304 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -149,6 +166,8 @@
 			children = (
 				0C1D39F21887B0560064C304 /* SettingsRepository.h */,
 				0C1D39F31887B0560064C304 /* SettingsRepository.m */,
+				0C17F490188910D10089C701 /* PostRepository.h */,
+				0C17F491188910D10089C701 /* PostRepository.m */,
 			);
 			name = Repositories;
 			sourceTree = "<group>";
@@ -165,6 +184,7 @@
 		0C63916C188790C800891ADA = {
 			isa = PBXGroup;
 			children = (
+				0C17F48A1889063F0089C701 /* Categories */,
 				0C63917E188790C900891ADA /* ChaiOneCodeChallenge */,
 				0C6391A0188790C900891ADA /* ChaiOneCodeChallengeTests */,
 				0C639177188790C900891ADA /* Frameworks */,
@@ -216,6 +236,7 @@
 		0C63917F188790C900891ADA /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				0C17F48E18890C410089C701 /* personIcon.png */,
 				0C639180188790C900891ADA /* ChaiOneCodeChallenge-Info.plist */,
 				0C639181188790C900891ADA /* InfoPlist.strings */,
 				0C639184188790C900891ADA /* main.m */,
@@ -255,8 +276,6 @@
 				0CF56D951888D91B00077D37 /* Link.m */,
 				0CF56D911888D91B00077D37 /* Entities.h */,
 				0CF56D921888D91B00077D37 /* Entities.m */,
-				0CF56D8E1888D91B00077D37 /* CoverImage.h */,
-				0CF56D8F1888D91B00077D37 /* CoverImage.m */,
 				0CF56D8B1888D91A00077D37 /* Meta.h */,
 				0CF56D8C1888D91A00077D37 /* Meta.m */,
 				0CF56D881888D91A00077D37 /* Mention.h */,
@@ -272,6 +291,8 @@
 		0CF56DA01888D9CA00077D37 /* User */ = {
 			isa = PBXGroup;
 			children = (
+				0CF56D8E1888D91B00077D37 /* CoverImage.h */,
+				0CF56D8F1888D91B00077D37 /* CoverImage.m */,
 				0CF56D9A1888D91B00077D37 /* User.h */,
 				0CF56D9B1888D91B00077D37 /* User.m */,
 				0CF56D7F1888D91A00077D37 /* Counts.h */,
@@ -362,6 +383,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0CF56DA41888DF5E00077D37 /* Model.xcdatamodeld in Resources */,
+				0C17F48F18890C410089C701 /* personIcon.png in Resources */,
 				0C63918F188790C900891ADA /* Main_iPad.storyboard in Resources */,
 				0C639194188790C900891ADA /* Images.xcassets in Resources */,
 				0C63918C188790C900891ADA /* Main_iPhone.storyboard in Resources */,
@@ -422,6 +444,7 @@
 				0CF56D961888D91B00077D37 /* Link.m in Sources */,
 				0CF56D8D1888D91A00077D37 /* Meta.m in Sources */,
 				0CF56D991888D91B00077D37 /* Source.m in Sources */,
+				0C17F48D188906540089C701 /* NSArray+Sort.m in Sources */,
 				0C1D39FB1887B9BA0064C304 /* SettingsRepository.m in Sources */,
 				0CF56D931888D91B00077D37 /* Entities.m in Sources */,
 				0CF56D9C1888D91B00077D37 /* User.m in Sources */,
@@ -436,6 +459,7 @@
 				0CF56D841888D91A00077D37 /* Hashtag.m in Sources */,
 				0CF56D8A1888D91A00077D37 /* Mention.m in Sources */,
 				0CF56D871888D91A00077D37 /* Post.m in Sources */,
+				0C17F492188910D10089C701 /* PostRepository.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

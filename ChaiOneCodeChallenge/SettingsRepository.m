@@ -12,6 +12,10 @@
 
 @property (nonatomic, strong) NSDictionary *settingsContents;
 
+- (id)objectForKey:(NSString *)key;
+
+- (NSString *)stringForKey:(NSString *)key;
+
 @end
 
 @implementation SettingsRepository
@@ -44,9 +48,9 @@ static SettingsRepository* _sharedSettingsRepository;
     return (NSString *)[self objectForKey:key];
 }
 
-- (NSString *)serviceUrl
+- (NSString *)get:(NSString *)key
 {
-    return [self stringForKey:@"ServiceUrl"];
+    return [self stringForKey:key];
 }
 
 @end

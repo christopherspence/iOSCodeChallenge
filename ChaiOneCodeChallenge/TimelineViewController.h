@@ -8,8 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface TimelineViewController : UITableViewController <NSFetchedResultsControllerDelegate>
+#define kCacheName      @"Posts"
 
-@property (nonatomic, strong) NSFetchedResultsController *fetchedResultsController;
+@interface TimelineViewController : UITableViewController <NSFetchedResultsControllerDelegate>
 
 @end

@@ -71,7 +71,7 @@ static RestKit *_sharedRestKit;
 {
     NSError *error = nil;
     // Get the service url from settings.plist
-    NSString *serviceUrl = [[SettingsRepository sharedSettingsRepository] serviceUrl];
+    NSString *serviceUrl = [[SettingsRepository sharedSettingsRepository] get:@"ServiceUrl"];
  
     self.objectManager = [RKObjectManager managerWithBaseURL:[NSURL URLWithString:serviceUrl]];
     self.objectManager.requestSerializationMIMEType = RKMIMETypeJSON;
@@ -105,15 +105,16 @@ static RestKit *_sharedRestKit;
                                              initWithManagedObjectContext:managedObjectStore.persistentStoreManagedObjectContext];
     
     [self setupLogging];
+    
+    // show the activityIndicator when we pull data
+    [AFNetworkActivityIndicatorManager sharedManager].enabled = YES;
 }
 
 - (void)setupLogging
 {
-#ifdef DEBUG
     RKLogConfigureByName("RestKit", RKLogLevelTrace);
     RKLogConfigureByName("RestKit/ObjectMapping", RKLogLevelTrace);
     RKLogConfigureByName("RestKit/Network", RKLogLevelTrace);
-#endif
 }
 
 
@@ -121,6 +122,7 @@ static RestKit *_sharedRestKit;
 
 - (void)setupDataMapping
 {
+    // TODO: Add a RequestDescriptor so we can send a post back to the server, someday.
     RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:[self postMapping]
                                                                                            method:RKRequestMethodGET
                                                                                       pathPattern:@"posts/stream/global"
