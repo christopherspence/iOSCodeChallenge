@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface TimelineViewController : UITableViewController
+@interface TimelineViewController : UITableViewController <NSFetchedResultsControllerDelegate>
+
+@property (nonatomic, strong) NSFetchedResultsController *fetchedResultsController;
 
 @end

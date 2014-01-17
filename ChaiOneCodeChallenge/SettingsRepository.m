@@ -30,7 +30,7 @@ static SettingsRepository* _sharedSettingsRepository;
 {
     if (self.settingsContents.count == 0) {
         NSBundle *bundle = [NSBundle mainBundle];
-        NSURL *plistURL = [bundle URLForResource:@"settings" withExtension:@"plist"];
+        NSURL *plistURL = [bundle URLForResource:@"Settings" withExtension:@"plist"];
         
         self.settingsContents = [NSDictionary dictionaryWithContentsOfURL:plistURL];
     }

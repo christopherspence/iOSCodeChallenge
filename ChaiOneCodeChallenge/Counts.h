@@ -7,12 +7,16 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <CoreData/CoreData.h>
 
-@interface Counts : NSObject
+@class User;
 
-@property (nonatomic) int following;
-@property (nonatomic) int posts;
-@property (nonatomic) int followers;
-@property (nonatomic) int stars;
+@interface Counts : NSManagedObject
+
+@property (nonatomic, retain) NSNumber *followers;
+@property (nonatomic, retain) NSNumber *following;
+@property (nonatomic, retain) NSNumber *posts;
+@property (nonatomic, retain) NSNumber *stars;
+@property (nonatomic, retain) User *user;
 
 @end

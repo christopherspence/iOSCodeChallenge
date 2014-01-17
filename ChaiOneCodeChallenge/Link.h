@@ -2,17 +2,21 @@
 //  Link.h
 //  ChaiOneCodeChallenge
 //
-//  Created by Christopher Spence on 1/15/14.
+//  Created by Christopher Spence on 1/16/14.
 //  Copyright (c) 2014 Christopher Spence. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
+#import <CoreData/CoreData.h>
 
-@interface Link : NSObject
+@class Entities;
 
-@property (nonatomic, strong) NSString *url;
-@property (nonatomic, strong) NSString *text;
-@property (nonatomic) int position;
-@property (nonatomic) int length;
+@interface Link : NSManagedObject
+
+@property (nonatomic, retain) NSNumber *length;
+@property (nonatomic, retain) NSNumber *position;
+@property (nonatomic, retain) NSString *text;
+@property (nonatomic, retain) NSString *url;
+@property (nonatomic, retain) Entities *entities;
 
 @end

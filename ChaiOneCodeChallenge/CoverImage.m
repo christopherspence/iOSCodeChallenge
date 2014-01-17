@@ -7,7 +7,16 @@
 //
 
 #import "CoverImage.h"
+#import "User.h"
+
 
 @implementation CoverImage
+
+@dynamic attribute;
+@dynamic height;
+@dynamic isDefault;
+@dynamic url;
+@dynamic width;
+@dynamic user;
 
 @end

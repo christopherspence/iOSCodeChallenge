@@ -2,29 +2,30 @@
 //  Post.h
 //  ChaiOneCodeChallenge
 //
-//  Created by Christopher Spence on 1/15/14.
+//  Created by Christopher Spence on 1/16/14.
 //  Copyright (c) 2014 Christopher Spence. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
+#import <CoreData/CoreData.h>
 
-@class Source, Entities, User;
+@class Entities, Source, User;
 
-@interface Post : NSObject
+@interface Post : NSManagedObject
 
-@property (nonatomic, strong) NSDate *createdAt;
-@property (nonatomic) int numberOfStars;
-@property (nonatomic) int numberOfReplies;
-@property (nonatomic, strong) Source *source;
-@property (nonatomic, strong) NSString *text;
-@property (nonatomic) int numberOfReposts;
-@property (nonatomic, strong) NSString *id;
-@property (nonatomic, strong) NSString *canonicalUrl;
-@property (nonatomic, strong) Entities *entities;
-@property (nonatomic, strong) NSString *html;
-@property (nonatomic) BOOL machineOnly;
-@property (nonatomic, strong) User *user;
-@property (nonatomic, strong) NSString *threadId;
-@property (nonatomic, strong) NSString *paginationId;
+@property (nonatomic, retain) NSString *canonicalUrl;
+@property (nonatomic, retain) NSString *createdAt;
+@property (nonatomic, retain) NSString *html;
+@property (nonatomic, retain) NSString *id;
+@property (nonatomic, retain) NSNumber *machineOnly;
+@property (nonatomic, retain) NSNumber *numberOfReplies;
+@property (nonatomic, retain) NSString *numberOfReposts;
+@property (nonatomic, retain) NSNumber *numberOfStars;
+@property (nonatomic, retain) NSString *paginationId;
+@property (nonatomic, retain) NSString *text;
+@property (nonatomic, retain) NSString *threadId;
+@property (nonatomic, retain) Entities *entities;
+@property (nonatomic, retain) Source *source;
+@property (nonatomic, retain) User *user;
 
 @end

@@ -7,9 +7,15 @@
 //
 
 #import "Counts.h"
+#import "User.h"
+
 
 @implementation Counts
 
-
+@dynamic followers;
+@dynamic following;
+@dynamic posts;
+@dynamic stars;
+@dynamic user;
 
 @end

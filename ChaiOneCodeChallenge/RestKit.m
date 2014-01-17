@@ -32,6 +32,7 @@
 - (void)setupErrorMapping;
 
 - (void)setupDataMapping;
+- (void)setupLogging;
 
 - (RKEntityMapping *)metaMapping;
 - (RKEntityMapping *)postMapping;
@@ -68,19 +69,51 @@ static RestKit *_sharedRestKit;
 
 - (void)setup
 {
+    NSError *error = nil;
     // Get the service url from settings.plist
     NSString *serviceUrl = [[SettingsRepository sharedSettingsRepository] serviceUrl];
-    
+ 
     self.objectManager = [RKObjectManager managerWithBaseURL:[NSURL URLWithString:serviceUrl]];
+    self.objectManager.requestSerializationMIMEType = RKMIMETypeJSON;
+ 
+    // Pull the location of the Core Data definition out of the bundle.
+    NSURL *modelUrl = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"Model" ofType:@"momd"]];
     
-    NSManagedObjectModel *managedObjectModel = [NSManagedObjectModel mergedModelFromBundles:nil];
+    NSManagedObjectModel *managedObjectModel = [[[NSManagedObjectModel alloc] initWithContentsOfURL:modelUrl] mutableCopy];
     RKManagedObjectStore *managedObjectStore = [[RKManagedObjectStore alloc] initWithManagedObjectModel:managedObjectModel];
     self.objectManager.managedObjectStore = managedObjectStore;
     
     [self setupErrorMapping];
     [self setupDataMapping];
     
-    [self setupCoreData];
+    // finish setting up Core Data
+    [managedObjectStore createPersistentStoreCoordinator];
+    
+    NSString *storePath = [RKApplicationDataDirectory() stringByAppendingString:@"Model.sqlite"];
+    
+    NSPersistentStore *persistentStore = [managedObjectStore addSQLitePersistentStoreAtPath:storePath
+                                                                     fromSeedDatabaseAtPath:nil
+                                                                          withConfiguration:nil
+                                                                                    options:@{NSMigratePersistentStoresAutomaticallyOption:@YES, NSInferMappingModelAutomaticallyOption:@YES }
+                                                                                      error:&error];
+    
+    NSAssert(persistentStore, @"Failed to add persistent store with error: %@", error);
+    
+    [managedObjectStore createManagedObjectContexts];
+    
+    managedObjectStore.managedObjectCache = [[RKInMemoryManagedObjectCache alloc]
+                                             initWithManagedObjectContext:managedObjectStore.persistentStoreManagedObjectContext];
+    
+    [self setupLogging];
+}
+
+- (void)setupLogging
+{
+#ifdef DEBUG
+    RKLogConfigureByName("RestKit", RKLogLevelTrace);
+    RKLogConfigureByName("RestKit/ObjectMapping", RKLogLevelTrace);
+    RKLogConfigureByName("RestKit/Network", RKLogLevelTrace);
+#endif
 }
 
 
@@ -88,7 +121,13 @@ static RestKit *_sharedRestKit;
 
 - (void)setupDataMapping
 {
-    [self.objectManager addResponseDescriptor:[RKResponseDescriptor responseDescriptorWithMapping:[self postMapping] method:RKRequestMethodGET pathPattern:@"0/posts/stream/global" keyPath:@"data" statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)]];
+    RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:[self postMapping]
+                                                                                           method:RKRequestMethodGET
+                                                                                      pathPattern:@"posts/stream/global"
+                                                                                          keyPath:@"data"
+                                                                                      statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
+    
+    [self.objectManager addResponseDescriptor:responseDescriptor];
 }
 
 - (void)setupErrorMapping
@@ -155,12 +194,12 @@ static RestKit *_sharedRestKit;
 {
     RKEntityMapping *sourceMapping = [RKEntityMapping mappingForEntityForName:NSStringFromClass(([Source class])) inManagedObjectStore:self.objectManager.managedObjectStore];
     
-    sourceMapping.identificationAttributes = @[ @"client_id" ];
+    sourceMapping.identificationAttributes = @[ @"clientId" ];
     
     [sourceMapping addAttributeMappingsFromDictionary:@{
         @"link" : @"link",
         @"name" : @"name",
-        @"client_id" : @"client_id"
+        @"client_id" : @"clientId"
     }];
     
     return sourceMapping;
@@ -172,7 +211,7 @@ static RestKit *_sharedRestKit;
     
     [entitiesMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"mentions" toKeyPath:@"mentions" withMapping:[self mentionsMapping]]];
     
-    [entitiesMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"hashtags" toKeyPath:@"hashtags" withMapping:[self hashtagsMapping]]];
+    [entitiesMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"hashtags" toKeyPath:@"hashTags" withMapping:[self hashtagsMapping]]];
     
     [entitiesMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"links" toKeyPath:@"links" withMapping:[self linksMapping]]];
     
@@ -201,8 +240,6 @@ static RestKit *_sharedRestKit;
 - (RKEntityMapping *)hashtagsMapping
 {
     RKEntityMapping *hashtagsMapping = [RKEntityMapping mappingForEntityForName:NSStringFromClass([Hashtag class]) inManagedObjectStore:self.objectManager.managedObjectStore];
-    
-    hashtagsMapping.identificationAttributes = @[ @"id" ];
     
     [hashtagsMapping addAttributeMappingsFromDictionary:@{
         @"name" : @"name",
@@ -236,8 +273,6 @@ static RestKit *_sharedRestKit;
 {
     RKEntityMapping *userMapping = [RKEntityMapping mappingForEntityForName:NSStringFromClass([User class]) inManagedObjectStore:self.objectManager.managedObjectStore];
     
-    userMapping.identificationAttributes = @[ @"id" ];
-    
     [userMapping addAttributeMappingsFromDictionary:@{
         @"username" : @"username",
         // avatarImage
@@ -245,7 +280,7 @@ static RestKit *_sharedRestKit;
         @"locale" : @"locale",
         @"createdAt" : @"createdAt",
         // coverImage
-        @"timezone" : @"timeZone",
+        @"timezone" : @"timezone",
         // counts
         @"type" : @"type",
         @"id" : @"id",
@@ -254,7 +289,7 @@ static RestKit *_sharedRestKit;
     
     [userMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"avatar_image" toKeyPath:@"avatarImage" withMapping:[self avatarImageMapping]]];
     
-    [userMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"description" toKeyPath:@"description" withMapping:[self descriptionMapping]]];
+    [userMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"description" toKeyPath:@"desc" withMapping:[self descriptionMapping]]];
     
     [userMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"cover_image" toKeyPath:@"coverImage" withMapping:[self coverImageMapping]]];
     

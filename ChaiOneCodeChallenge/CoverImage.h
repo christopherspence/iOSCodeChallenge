@@ -7,12 +7,17 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <CoreData/CoreData.h>
 
-@interface CoverImage : NSObject
+@class User;
 
-@property (nonatomic, strong) NSString *url;
-@property (nonatomic) int width;
-@property (nonatomic) BOOL isDefault;
-@property (nonatomic) int height;
+@interface CoverImage : NSManagedObject
+
+@property (nonatomic, retain) NSNumber *attribute;
+@property (nonatomic, retain) NSNumber *height;
+@property (nonatomic, retain) NSNumber *isDefault;
+@property (nonatomic, retain) NSNumber *url;
+@property (nonatomic, retain) NSNumber *width;
+@property (nonatomic, retain) User *user;
 
 @end
